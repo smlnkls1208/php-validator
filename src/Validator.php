@@ -24,6 +24,8 @@ class Validator
 
     public function validate(): bool
     {
+        $this->errors = [];
+
         foreach ($this->rules as $field => $fieldRules) {
             $this->validateField($field, $fieldRules);
         }
@@ -93,5 +95,16 @@ class Validator
     public static function registerRule(string $ruleClass): void
     {
         self::$ruleMap[$ruleClass::name()] = $ruleClass;
+    }
+
+    private function getDefaultMessage(string $rule): string
+    {
+        $ruleClass = self::$ruleMap[$rule] ?? null;
+
+        if ($ruleClass && method_exists($ruleClass, 'message')) {
+            return $ruleClass::message();
+        }
+
+        return 'Ошибка валидации для поля :field';
     }
 }

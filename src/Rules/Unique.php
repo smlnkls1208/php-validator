@@ -20,6 +20,6 @@ class Unique
 
     public static function message(): string
     {
-        return ':field must be unique';
+        return 'Поле :field должно быть уникально';
     }
 }

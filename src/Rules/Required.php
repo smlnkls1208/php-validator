@@ -13,4 +13,9 @@ class Required
     {
         return !empty($value);
     }
+
+    public static function message(): string
+    {
+        return 'Поле :field пусто';
+    }
 }
