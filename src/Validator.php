@@ -72,7 +72,14 @@ class Validator
 
     private function addError(string $field, string $rule, array $params): void
     {
-        $this->errors[$field][] = $this->customMessages[$rule] ?? "{$field} validation failed: {$rule}";
+        $message = $this->customMessages[$rule] ?? $this->getDefaultMessage($rule);
+        $replacements = array_merge([':field' => $field], $params);
+
+        $this->errors[$field][] = str_replace(
+            array_keys($replacements),
+            array_values($replacements),
+            $message
+        );
     }
 
     private static function registerDefaultRules(): void
