@@ -78,6 +78,7 @@ class Validator
     private static function registerDefaultRules(): void
     {
         self::registerRule(\PhpValidator\Rules\Required::class);
+        self::registerRule(\PhpValidator\Rules\Min::class);
     }
 
     public static function registerRule(string $ruleClass): void
