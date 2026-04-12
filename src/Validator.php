@@ -86,6 +86,7 @@ class Validator
     {
         self::registerRule(\PhpValidator\Rules\Required::class);
         self::registerRule(\PhpValidator\Rules\Min::class);
+        self::registerRule(\PhpValidator\Rules\Max::class);
     }
 
     public static function registerRule(string $ruleClass): void
