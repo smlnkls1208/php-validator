@@ -1,0 +1,15 @@
+{
+  "name": "smlnkls1208/php-validator",
+  "description": "Validation library",
+  "type": "library",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "PhpValidator\\": "src/"
+    }
+  },
+  "require": {
+    "php": ">=8.0",
+    "illuminate/database": "^10.0|^11.0"
+  }
+}
