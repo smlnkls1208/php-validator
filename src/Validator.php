@@ -25,16 +25,7 @@ class Validator
     public function validate(): bool
     {
         foreach ($this->rules as $field => $fieldRules) {
-            foreach ($fieldRules as $rule) {
-                if (!isset(self::$ruleMap[$rule])) {
-                    throw new \InvalidArgumentException("Rule {$rule} not found");
-                }
-
-                $ruleClass = self::$ruleMap[$rule];
-                if (!$ruleClass::validate($this->data[$field] ?? null)) {
-                    $this->addError($field, $rule);
-                }
-            }
+            $this->validateField($field, $fieldRules);
         }
         return empty($this->errors);
     }
@@ -49,7 +40,37 @@ class Validator
         return $this->errors;
     }
 
-    private function addError(string $field, string $rule): void
+    private function validateField(string $field, array $rules): void
+    {
+        foreach ($rules as $rule) {
+            $this->applyRule($field, $rule);
+        }
+    }
+
+    private function parseRule(string $rule): array
+    {
+        $parts = explode(':', $rule, 2);
+        $name = $parts[0];
+        $params = isset($parts[1]) ? explode(',', $parts[1]) : [];
+
+        return [$name, $params];
+    }
+
+    private function applyRule(string $field, string $rule): void
+    {
+        [$ruleName, $params] = $this->parseRule($rule);
+
+        if (!isset(self::$ruleMap[$ruleName])) {
+            throw new \InvalidArgumentException("Rule {$ruleName} not found");
+        }
+
+        $ruleClass = self::$ruleMap[$ruleName];
+        if (!$ruleClass::validate($this->data[$field] ?? null, $params)) {
+            $this->addError($field, $ruleName, $params);
+        }
+    }
+
+    private function addError(string $field, string $rule, array $params): void
     {
         $this->errors[$field][] = $this->customMessages[$rule] ?? "{$field} validation failed: {$rule}";
     }
